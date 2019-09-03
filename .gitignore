@@ -1,0 +1,4 @@
+*.pyc
+squat.egg-info/*
+build/*
+.DS_Store

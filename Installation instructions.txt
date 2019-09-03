@@ -1,0 +1,12 @@
+- create virtualenv
+
+- install spacy pandas and jupyter by typing
+    pip install --index-url https://artifactory.global.standardchartered.com/artifactory/api/pypi/pypi/simple spacy pandas jupyter
+
+- download the english core lirary from below link for spacy
+    https://github.com/explosion/spacy-models/releases/tag/en_core_web_sm-2.1.0
+
+- install eng core by typing,
+    pip install /path/to/en_core_web_sm-2.0.0.tar.gz
+
+do a pip install on the latest whl file in the dist folder and SQUAT is installed successfully.
