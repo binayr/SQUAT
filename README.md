@@ -21,7 +21,7 @@ SQUAT contains the packages or libraries required for supporting and running the
 4. jupyter notebook
 
 **Source**:<br>
-https://bitbucket.global.standardchartered.com/users/1586202/repos/squat/browse
+https://github.com/binayr/SQUAT
 
 ## About the ML model
 
