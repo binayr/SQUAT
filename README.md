@@ -57,3 +57,21 @@ date, description, debit, credit, runningbalance (irrespective of the order)
 
 * Once evaluated you can call ```get_analysis``` method to get the comprehensive analysis or call
 ```show_stat``` to get the statistics.
+
+OR
+
+* You can import the utility by typing the following,
+```from squat.Classifier.ClassifierUtil import ClassifierUtilRaw```
+
+* Read any csv or excel using pandas and create a dataframe. Please make sure the df has the following header atleast,
+date, description, debit, credit, runningbalance (irrespective of the order)
+
+* The ```ClassifierUtilRaw``` can be initialized to get the category.
+
+* Once initialized please make sure to call ```obj.get_cat(text)``` to evaluate the category of the text.
+
+* For Example,
+	```
+	obj.get_cat('paytm transaction gurgaon')
+	Out: ('Digital', 0.9632782936096191)
+	```
