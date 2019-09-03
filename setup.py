@@ -14,6 +14,11 @@ def load_requirements(fname):
     return [str(ir.req) for ir in reqs]
 
 
+def long_description(fname):
+    with open(fname) as f:
+        return f.read()
+
+
 setuptools.setup(
     name='squat',
     version='0.1.11',
@@ -21,12 +26,15 @@ setuptools.setup(
     author="Binay Kumar Ray",
     author_email="binayray2009@gmail.com",
     description="SQUAT",
-    long_description='spend quality and usage analysis tool',
+    long_description=long_description('README.md'),
     long_description_content_type="text/markdown",
     url="https://github.com/binayr/SQUAT.git",
     packages=setuptools.find_packages(),
     include_package_data=True,
     install_requires=load_requirements('requirements.txt'),
+    dependency_links=[
+        "https://github.com/explosion/spacy-models/releases/tag/en_core_web_sm-2.1.0"
+    ],
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
