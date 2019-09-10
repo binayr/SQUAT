@@ -26,6 +26,8 @@ import thinc.extra.datasets
 
 import spacy
 import pandas as pd
+
+from collections import defaultdict
 from spacy.util import minibatch, compounding
 
 
@@ -71,6 +73,7 @@ def main(model=None, output_dir=None, n_iter=20, n_texts=2000, init_tok2vec=None
     print("Loading Bankstatement data...")
     (train_texts, train_cats), (dev_texts, dev_cats), labels = load_data()
 
+    print(train_cats)
     # add label to text classifier
     for label in labels:
         textcat.add_label(label)
@@ -146,18 +149,21 @@ def load_data(limit=0, split=0.8):
     cats = []
 
     for y in labels:
-        v = {
-            'cash': y == 'cash',
-            'transfer': y == 'transfer',
-            'salary': y == 'salary',
-            'tax': y == 'tax',
-            'digital': y == 'digital',
-            'shopping': y == 'shopping',
-            'cheque': y == 'cheque',
-            'travel': y == 'travel',
-            'food': y == 'food'
-        }
+        v = {k: False for k in csv_labels}
+        v[y] = True
+        # v = {
+        #     'cash': y == 'cash',
+        #     'transfer': y == 'transfer',
+        #     'salary': y == 'salary',
+        #     'tax': y == 'tax',
+        #     'digital': y == 'digital',
+        #     'shopping': y == 'shopping',
+        #     'cheque': y == 'cheque',
+        #     'travel': y == 'travel',
+        #     'food': y == 'food'
+        # }
         cats.append(v)
+
     # cats = [{"POSITIVE": bool(y), "NEGATIVE": not bool(y)} for y in labels]
     split = int(len(train_data) * split)
     return (texts[:split], cats[:split]), (texts[split:], cats[split:]), csv_labels
