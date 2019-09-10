@@ -18,6 +18,7 @@ For more details, see the documentation:
 Compatible with: spaCy v2.0.0+
 """
 from __future__ import unicode_literals, print_function
+import os
 import plac
 import random
 from pathlib import Path
@@ -28,6 +29,9 @@ import pandas as pd
 from spacy.util import minibatch, compounding
 
 
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+
 # @plac.annotations(
 #     model=("Model name. Defaults to blank 'en' model.", "option", "m", str),
 #     output_dir=("Optional output directory", "option", "o", Path),
@@ -36,7 +40,6 @@ from spacy.util import minibatch, compounding
 #     init_tok2vec=("Pretrained tok2vec weights", "option", "t2v", Path)
 # )
 def main(model=None, output_dir=None, n_iter=20, n_texts=2000, init_tok2vec=None):
-    output_dir = 'out'
     if output_dir is not None:
         output_dir = Path(output_dir)
         if not output_dir.exists():
@@ -64,20 +67,14 @@ def main(model=None, output_dir=None, n_iter=20, n_texts=2000, init_tok2vec=None
     else:
         textcat = nlp.get_pipe("textcat")
 
-    # add label to text classifier
-    textcat.add_label("Cash")
-    textcat.add_label("Transfer")
-    textcat.add_label("Salary")
-    textcat.add_label("Tax")
-    textcat.add_label("Digital")
-    textcat.add_label("Shopping")
-    textcat.add_label("Cheque")
-    textcat.add_label("Travel")
-    textcat.add_label("Food")
-
     # load the Bankstatement description dataset
     print("Loading Bankstatement data...")
-    (train_texts, train_cats), (dev_texts, dev_cats) = load_data()
+    (train_texts, train_cats), (dev_texts, dev_cats), labels = load_data()
+
+    # add label to text classifier
+    for label in labels:
+        textcat.add_label(label)
+
     train_texts = train_texts[:n_texts]
     train_cats = train_cats[:n_texts]
     print(
@@ -137,8 +134,11 @@ def main(model=None, output_dir=None, n_iter=20, n_texts=2000, init_tok2vec=None
 def load_data(limit=0, split=0.8):
     """Load data from the train.csv dataset."""
     # Partition off part of the train data for evaluation
-    train_df = pd.read_csv('train.csv')
-    train_data = [(i[1]['Text'],i[1]['Label']) for i in train_df.iterrows()]
+    # import pdb;pdb.set_trace()
+    train_df = pd.read_csv(os.path.join(BASE_DIR, 'train.csv'))
+    grouped_df = train_df.groupby(by='Label')
+    csv_labels = grouped_df.groups.keys()
+    train_data = [(i[1]['Text'], i[1]['Label']) for i in train_df.iterrows()]
     random.shuffle(train_data)
     train_data = train_data[-limit:]
     texts, labels = zip(*train_data)
@@ -147,20 +147,20 @@ def load_data(limit=0, split=0.8):
 
     for y in labels:
         v = {
-            'Cash': y == 'c',
-            'Transfer': y == 'tr',
-            'Salary': y == 's',
-            'Tax': y == 'tx',
-            'Digital': y == 'd',
-            'Shopping': y == 'sh',
-            'Cheque': y == 'ch',
-            'Travel': y == 'tv',
-            'Food': y == 'f'
+            'cash': y == 'cash',
+            'transfer': y == 'transfer',
+            'salary': y == 'salary',
+            'tax': y == 'tax',
+            'digital': y == 'digital',
+            'shopping': y == 'shopping',
+            'cheque': y == 'cheque',
+            'travel': y == 'travel',
+            'food': y == 'food'
         }
         cats.append(v)
     # cats = [{"POSITIVE": bool(y), "NEGATIVE": not bool(y)} for y in labels]
     split = int(len(train_data) * split)
-    return (texts[:split], cats[:split]), (texts[split:], cats[split:])
+    return (texts[:split], cats[:split]), (texts[split:], cats[split:]), csv_labels
 
 
 def evaluate(tokenizer, textcat, texts, cats):
@@ -193,4 +193,5 @@ def evaluate(tokenizer, textcat, texts, cats):
 
 if __name__ == "__main__":
     # plac.call(main)
-    main()
+    output_dir = output_dir = os.path.join(BASE_DIR, 'out')
+    main(output_dir=output_dir)
