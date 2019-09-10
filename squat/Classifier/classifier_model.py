@@ -4,11 +4,11 @@
 
 __author__ = "Binay Kumar Ray"
 __copyright__ = "Copyright 2019, Standard Chartered Bank"
-__version__ = "0.1.9"
-__email__ = "binaykumar.ray@sc.com"
-__status__ = "Hackathon"
+__version__ = "1.0.0"
+__email__ = "binayray2009@gmail.com"
+__status__ = "Tool"
 
-Train a convolutional neural network text classifier on the 
+Train a convolutional neural network text classifier on the
 Bankstatement description classification dataset, using the TextCategorizer component.
 The dataset will be loaded automatically via Thinc's built-in dataset loader.
 The model is added to spacy.pipeline, and predictions are available via `doc.cats`.
@@ -28,13 +28,13 @@ import pandas as pd
 from spacy.util import minibatch, compounding
 
 
-@plac.annotations(
-    model=("Model name. Defaults to blank 'en' model.", "option", "m", str),
-    output_dir=("Optional output directory", "option", "o", Path),
-    n_texts=("Number of texts to train from", "option", "t", int),
-    n_iter=("Number of training iterations", "option", "n", int),
-    init_tok2vec=("Pretrained tok2vec weights", "option", "t2v", Path)
-)
+# @plac.annotations(
+#     model=("Model name. Defaults to blank 'en' model.", "option", "m", str),
+#     output_dir=("Optional output directory", "option", "o", Path),
+#     n_texts=("Number of texts to train from", "option", "t", int),
+#     n_iter=("Number of training iterations", "option", "n", int),
+#     init_tok2vec=("Pretrained tok2vec weights", "option", "t2v", Path)
+# )
 def main(model=None, output_dir=None, n_iter=20, n_texts=2000, init_tok2vec=None):
     output_dir = 'out'
     if output_dir is not None:
@@ -192,4 +192,5 @@ def evaluate(tokenizer, textcat, texts, cats):
 
 
 if __name__ == "__main__":
-    plac.call(main)
+    # plac.call(main)
+    main()
