@@ -21,7 +21,7 @@ def long_description(fname):
 
 setuptools.setup(
     name='squat',
-    version='1.0.1',
+    version='1.0.3',
     scripts=[],
     author="Binay Kumar Ray",
     author_email="binayray2009@gmail.com",
