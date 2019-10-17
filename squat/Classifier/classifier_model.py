@@ -3,7 +3,7 @@
 """ Train a convolutional neural network text classifier.
 
 __author__ = "Binay Kumar Ray"
-__copyright__ = "Copyright 2019, Standard Chartered Bank"
+__copyright__ = "Copyright 2019, Binay Kumar Ray"
 __version__ = "1.0.0"
 __email__ = "binayray2009@gmail.com"
 __status__ = "Tool"
@@ -27,7 +27,7 @@ import thinc.extra.datasets
 import spacy
 import pandas as pd
 
-from collections import defaultdict
+from arghandler import ArgumentHandler
 from spacy.util import minibatch, compounding
 
 
@@ -41,7 +41,7 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 #     n_iter=("Number of training iterations", "option", "n", int),
 #     init_tok2vec=("Pretrained tok2vec weights", "option", "t2v", Path)
 # )
-def main(model=None, output_dir=None, n_iter=20, n_texts=2000, init_tok2vec=None):
+def main(model=None, output_dir=None, training_file=None, n_iter=20, n_texts=2000, init_tok2vec=None):
     if output_dir is not None:
         output_dir = Path(output_dir)
         if not output_dir.exists():
@@ -70,10 +70,10 @@ def main(model=None, output_dir=None, n_iter=20, n_texts=2000, init_tok2vec=None
         textcat = nlp.get_pipe("textcat")
 
     # load the Bankstatement description dataset
-    print("Loading Bankstatement data...")
-    (train_texts, train_cats), (dev_texts, dev_cats), labels = load_data()
+    print("Loading training data...")
+    (train_texts, train_cats), (dev_texts, dev_cats), labels = load_data(training_file=training_file)
 
-    print(train_cats)
+    # print(train_cats)
     # add label to text classifier
     for label in labels:
         textcat.add_label(label)
@@ -134,11 +134,14 @@ def main(model=None, output_dir=None, n_iter=20, n_texts=2000, init_tok2vec=None
         print(test_text, doc2.cats)
 
 
-def load_data(limit=0, split=0.8):
+def load_data(limit=0, split=0.8, training_file=None):
     """Load data from the train.csv dataset."""
     # Partition off part of the train data for evaluation
     # import pdb;pdb.set_trace()
-    train_df = pd.read_csv(os.path.join(BASE_DIR, 'train.csv'))
+    if training_file:
+        train_df = pd.read_csv(training_file)
+    else:
+        train_df = pd.read_csv(os.path.join(BASE_DIR, 'train.csv'))
     grouped_df = train_df.groupby(by='Label')
     csv_labels = grouped_df.groups.keys()
     train_data = [(i[1]['Text'], i[1]['Label']) for i in train_df.iterrows()]
@@ -197,7 +200,29 @@ def evaluate(tokenizer, textcat, texts, cats):
     return {"textcat_p": precision, "textcat_r": recall, "textcat_f": f_score}
 
 
+def train_model_cli(parser, context, args):
+    """Emit the path to the autocomplete script for use with eval $(snap autocomplete)"""
+
+    handler = ArgumentHandler(usage="Method to train the model",
+                              description="Trains the model manually from the cli",
+                              epilog="Train the model manually")
+
+    handler.add_argument('-o', '--output', dest='model_path', default='out')
+
+    handler.add_argument('-f', '--file', dest='training_file', default=None)
+
+    out, file = handler.parse_known_args(args)
+    if not os.path.exists(out.model_path):
+        os.mkdir(out.model_path)
+
+    if not os.path.exists(out.training_file):
+        raise Exception("Training file doesn't exists please provide full path.")
+
+    main(output_dir=out.model_path, training_file=out.training_file)
+    # print(out.model_path, out.training_file)
+
+
 if __name__ == "__main__":
     # plac.call(main)
-    output_dir = output_dir = os.path.join(BASE_DIR, 'out')
+    output_dir = os.path.join(BASE_DIR, 'out')
     main(output_dir=output_dir)
