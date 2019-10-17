@@ -3,10 +3,10 @@
 """Utility for SQUAT Text Classifier.
 
 __author__ = "Binay Kumar Ray"
-__copyright__ = "Copyright 2019, Standard Chartered Bank"
-__version__ = "0.1.9"
-__email__ = "binaykumar.ray@sc.com"
-__status__ = "Hackathon"
+__copyright__ = "Copyright 2019, Binay Kumar Ray"
+__version__ = "1.0.0"
+__email__ = "binayray2009@gmail.com"
+__status__ = "Tool"
 
 This is an utility to use pretrained SQUAT text classifier with the bankstatement,
 We do various things like classifying the records onto different labels, summarizing,
@@ -29,12 +29,15 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 
 class ClassifierUtil:
-    def __init__(self, statement_data):
+    def __init__(self, statement_data, model_dir=None):
         self.stmt_data = statement_data
         self.total = len(statement_data)
 
         # loading pretrained model
-        self.model_dir = os.path.join(BASE_DIR, 'out')
+        if model_dir:
+            self.model_dir = model_dir
+        else:
+            self.model_dir = os.path.join(BASE_DIR, 'out')
 
         # prepare the saved model and get the categories
         print("Loading from", self.model_dir)
@@ -130,8 +133,11 @@ class ClassifierUtilRaw:
     
     Unlike the previous class you do not need to pass a df but a text just to classify it."""
 
-    def __init__(self):
-        self.model_dir = os.path.join(BASE_DIR, 'out')
+    def __init__(self, model_dir=None):
+        if model_dir:
+            self.model_dir = model_dir
+        else:
+            self.model_dir = os.path.join(BASE_DIR, 'out')
 
         # prepare the saved model
         print("Loading from", self.model_dir)

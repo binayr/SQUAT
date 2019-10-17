@@ -21,7 +21,7 @@ def long_description(fname):
 
 setuptools.setup(
     name='squat',
-    version='1.0.0',
+    version='1.0.1',
     scripts=[],
     author="Binay Kumar Ray",
     author_email="binayray2009@gmail.com",
@@ -40,4 +40,10 @@ setuptools.setup(
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
     ],
+    entry_points={
+          'console_scripts': [
+              # add cli scripts here in this form:
+              'squat=squat.cli:main'
+          ],
+      }
 )
