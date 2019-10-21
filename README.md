@@ -1,8 +1,6 @@
 # **S**pend **Q**uality and **U**sage **A**nalysis **T**ool (**SQUAT**)
 
-This Project is a tool to analyse Bankstatements transactions
-to give a comprehensive report on the spend, earning and usage of an user.
-It does the following job:
+This Project is a tool to analyse Text and categorize the text into the categories we defined during a supervised learning process to create the ML Model. We started off with Bank Statement transactions to give a comprehensive report on the spend, earning and usage of an user. It does the following job:
 
 * Creates and trains a Machine learning model to classify transactions based on the narration.
 * All the training and other repeatative work is already done for you.
@@ -19,17 +17,22 @@ SQUAT contains the packages or libraries required for supporting and running the
 2. Core ENG package for spacy
 3. pandas
 4. jupyter notebook
+5. arghandler
 
 **Source**:<br>
 https://github.com/binayr/SQUAT
 
 ## About the ML model
 
-The model is created based on most common keyword observed from the bankstatements of singapore.
-This project has a large scope of improving the accuracy and adding more classifications in future
-depending on the type of dataset available to us.
+**Version 0.1**
+
+The model is created based on most common keyword observed from the bankstatements of singapore. This project has a large scope of improving the accuracy and adding more classifications in future depending on the type of dataset available to us.
 
 Everytime we update the model a new version of SQUAT is supposed to get released.
+
+**Version 1.0.3**
+
+We have moved beyond the above limitation. Users can Now train the ML Model on any data set on any location they want and use the location to import the model and categorize text. There are certain rules to follow to train the ML model. Please check the below csv file and maintain the training data accordingly.
 
 ## Create and use whl file
 
@@ -75,3 +78,8 @@ date, description, debit, credit, runningbalance (irrespective of the order)
 	obj.get_cat('paytm transaction gurgaon')
 	Out: ('Digital', 0.9632782936096191)
 	```
+	
+We also have few CLI Tools for training the model to our need. Developers can simply type,
+
+```squat classifier train -o <output path for the ML model> -f <path to the training data set in csv>```
+The above code will create the model in the path you have provided and Once done You can use the same path with ClassifierUtilRaw to start the categorization.
