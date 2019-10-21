@@ -82,4 +82,5 @@ date, description, debit, credit, runningbalance (irrespective of the order)
 We also have few CLI Tools for training the model to our need. Developers can simply type,
 
 ```squat classifier train -o <output path for the ML model> -f <path to the training data set in csv>```
+
 The above code will create the model in the path you have provided and Once done You can use the same path with ClassifierUtilRaw to start the categorization.
